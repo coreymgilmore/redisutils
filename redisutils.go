@@ -42,7 +42,7 @@ var (
 //server is a  "localhost:port" string
 //maxNumConnections is the size of the pool you want to open
 func Connect(server string, maxNumConnections int) {
-	connPool, err := pool.new("tcp", )
+	connPool, err := pool.New("tcp", server, maxNumConnections)
 	if err != nil {
 		log.Println("redisutils.go-Connect error")
 		log.Panicln(err)
@@ -59,7 +59,7 @@ func Connect(server string, maxNumConnections int) {
 //CLOSE ALL POOL CONNECTIONS
 //using the radix Empty() function
 func Close () {
-	PPOL.Empty()
+		POOL.Empty()
 	return
 }
 
@@ -70,11 +70,11 @@ func Close () {
 //check if the key exists
 func Get (key string) (string, error) {
 	//get a connection from the pool
-	c, err := PPOL.Get()
+	c, err := 	POOL.Get()
 	if err != nil {
 		return "", err
 	}
-	defer PPOL.Put(c)
+	defer 	POOL.Put(c)
 
 	//check if this key is stored in redis
 	resp := 	c.Cmd("GET", key)
@@ -107,11 +107,11 @@ func Get (key string) (string, error) {
 //when getting this key, you will need to Unmarshal the json back into a struct
 func Set (key string, value interface{}) error {
 	//get a connection from the pool
-	c, err := PPOL.Get()
+	c, err := 	POOL.Get()
 	if err != nil {
 		return err
 	}
-	defer PPOL.Put(c)
+	defer 	POOL.Put(c)
 
 	//convert value into string
 	json, _ := 	json.Marshal(value)
